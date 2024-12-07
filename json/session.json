@@ -1,0 +1,10 @@
+{
+    "session_id": "2024-12-07-001",
+    "timestamp": "2024-12-07T14:30:00Z",
+    "summary": "Test run for the dynamic HTML generator.",
+    "user_input": ["Is the script complete?"],
+    "assistant_output": ["Confirmed the script works end-to-end."],
+    "session_type": "Test",
+    "tags": ["Testing", "Node.js"],
+    "outcomes": ["Validated script functionality."]
+}
