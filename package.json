@@ -1,0 +1,15 @@
+{
+  "name": "dynamic-html-generator",
+  "version": "1.0.0",
+  "description": "Generate HTML dynamically from JSON files.",
+  "main": "script.js",
+  "type": "module", 
+  "scripts": {
+    "start": "node script.js"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0"
+  },
+  "author": "Edson & Ursula",
+  "license": "MIT"
+}
