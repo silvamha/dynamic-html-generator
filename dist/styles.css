@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+}
+h1 {
+    color: #333;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li a {
+    text-decoration: none;
+    color: #007BFF;
+}
+li a:hover {
+    text-decoration: underline;
+}

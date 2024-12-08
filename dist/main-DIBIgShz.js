@@ -23,4 +23,4 @@
     </html>
     `;await o.writeFile(o.join(c,"session.json"),JSON.stringify(e,null,2));const n=o.join(d,`${e.session_id}.html`);await o.writeFile(n,i),console.log(`Session HTML created at: ${n}`)},h=async e=>{let i=await o.readFile(u,"utf-8");const n=`<li><a href="./sessions/${e.session_id}.html">Session ${e.session_id}</a></li>`;i=i.replace(new RegExp(n,"g"),""),i=i.replace("</ul>",`    ${n}
         </ul>`),await o.writeFile(u,i),console.log("Homepage updated with new session link.")},m=async()=>{try{const e=o.join(c,"session.json"),i=await o.readFile(e,"utf-8"),n=JSON.parse(i);await p(n),await h(n)}catch(e){console.error("Error:",e)}};typeof window>"u"&&m();
-//# sourceMappingURL=main-DPDsLqz4.js.map
+//# sourceMappingURL=main-DIBIgShz.js.map
