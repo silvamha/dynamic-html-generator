@@ -21,13 +21,35 @@ const generateHTML = async (sessionData) => {
         <h1>Session ${sessionData.session_id}</h1>
         <p><strong>Date:</strong> ${sessionData.timestamp || 'N/A'}</p>
         <p><strong>Summary:</strong> ${sessionData.summary || 'No summary available'}</p>
-        <h2>Content</h2>
-        <div class="content">
-            <h3>Question</h3>
-            <p>${sessionData.content?.question || 'No question'}</p>
-            <h3>Answer</h3>
-            <p>${sessionData.content?.answer || 'No answer'}</p>
+        
+        <h2>Conversation Details</h2>
+        <div class="session-details">
+            <h3>Session Type</h3>
+            <p>${sessionData.session_type || 'Unspecified'}</p>
+            
+            <h3>Tags</h3>
+            <ul>
+                ${(sessionData.tags || []).map(tag => `<li>${tag}</li>`).join('')}
+            </ul>
+            
+            <h3>Conversation</h3>
+            <div class="conversation">
+                ${(sessionData.user_input || []).map((input, index) => `
+                    <div class="user-input">
+                        <strong>User:</strong> ${input}
+                    </div>
+                    <div class="assistant-output">
+                        <strong>Assistant:</strong> ${(sessionData.assistant_output || [])[index] || ''}
+                    </div>
+                `).join('')}
+            </div>
+            
+            <h3>Outcomes</h3>
+            <ul>
+                ${(sessionData.outcomes || []).map(outcome => `<li>${outcome}</li>`).join('')}
+            </ul>
         </div>
+        
         <p><a href="/">Back to Home</a></p>
     </body>
     </html>
@@ -83,6 +105,9 @@ const main = async () => {
         await updateHomepage(sessionPaths);
     } catch (error) {
         console.error('Error processing sessions:', error);
+        // Log the specific error details
+        console.error('Detailed error:', error.message);
+        console.error('Error stack:', error.stack);
     }
 };
 
