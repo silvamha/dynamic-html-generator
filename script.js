@@ -54,13 +54,18 @@ const updateHomepage = async (sessionData, isFirstSession) => {
         // Create the new link
         const newLink = `<li><a href="/sessions/${sessionData.session_id}.html">Session ${sessionData.session_id}</a></li>`;
         
-        // Replace the closing </ul> tag with the new link and the closing tag
-        const updatedHomepageContent = homepageContent.replace('</ul>', `    ${newLink}\n        </ul>`);
-        
-        // Write the updated content back to the file
-        await fs.writeFile(homepagePath, updatedHomepageContent);
-        
-        console.log(`Added link for session ${sessionData.session_id} to homepage`);
+        // Ensure the link is not already present
+        if (!homepageContent.includes(newLink)) {
+            // Replace the closing </ul> tag with the new link and the closing tag
+            const updatedHomepageContent = homepageContent.replace('</ul>', `    ${newLink}\n        </ul>`);
+            
+            // Write the updated content back to the file
+            await fs.writeFile(homepagePath, updatedHomepageContent);
+            
+            console.log(`Added link for session ${sessionData.session_id} to homepage`);
+        } else {
+            console.log(`Link for session ${sessionData.session_id} already exists`);
+        }
     } catch (error) {
         console.error('Error updating homepage:', error);
     }
