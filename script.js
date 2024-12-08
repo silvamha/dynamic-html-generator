@@ -1,12 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const jsonDir = './json';
-const sessionsDir = './sessions';
-const homepagePath = './index.html';
+const jsonDir = './dist/json'; // Path to JSON files
+const sessionsDir = './dist/sessions'; // Path to generated HTML files
+const homepagePath = './dist/index.html'; // Path to homepage
 
 const generateHTML = async (sessionData) => {
-    await fs.mkdir(jsonDir, { recursive: true });
     await fs.mkdir(sessionsDir, { recursive: true });
 
     const sessionHTML = `
@@ -34,11 +33,6 @@ const generateHTML = async (sessionData) => {
     </html>
     `;
 
-    await fs.writeFile(
-        path.join(jsonDir, 'session.json'),
-        JSON.stringify(sessionData, null, 2)
-    );
-
     const outputFilePath = path.join(sessionsDir, `${sessionData.session_id}.html`);
     await fs.writeFile(outputFilePath, sessionHTML);
     console.log(`Session HTML created at: ${outputFilePath}`);
@@ -53,11 +47,16 @@ const updateHomepage = async (sessionData) => {
 
 const main = async () => {
     try {
-        const jsonFile = path.join(jsonDir, 'session.json');
-        const data = await fs.readFile(jsonFile, 'utf-8');
-        const sessionData = JSON.parse(data);
-        await generateHTML(sessionData);
-        await updateHomepage(sessionData);
+        const files = await fs.readdir(jsonDir); // Read all files in the JSON directory
+        for (const file of files) {
+            if (file.endsWith('.json')) { // Process only JSON files
+                const jsonFile = path.join(jsonDir, file);
+                const data = await fs.readFile(jsonFile, 'utf-8');
+                const sessionData = JSON.parse(data);
+                await generateHTML(sessionData);
+                await updateHomepage(sessionData);
+            }
+        }
     } catch (error) {
         console.error('Error:', error);
     }
