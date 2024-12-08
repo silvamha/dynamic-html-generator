@@ -110,3 +110,16 @@ const main = async () => {
 if (typeof window === 'undefined') {
     main();
 }
+
+document.getElementById('searchInput').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const links = document.querySelectorAll('#session-list li a');
+
+    links.forEach(link => {
+        if (link.textContent.toLowerCase().includes(query)) {
+            link.parentElement.style.display = '';
+        } else {
+            link.parentElement.style.display = 'none';
+        }
+    });
+});
