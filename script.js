@@ -60,19 +60,25 @@ const generateSessionHTML = async (sessionData) => {
 };
 
 const updateHomepage = async (sessionPaths) => {
-    const newLinks = sessionPaths.map(sessionPath => {
+    // Remove duplicate paths and session.json
+    const filteredPaths = [...new Set(sessionPaths)]
+        .filter(path => !path.includes('session.json'));
+
+    const uniqueLinks = filteredPaths.map(sessionPath => {
         const sessionId = path.basename(sessionPath, '.html');
         return `<li><a href="/sessions/${sessionId}.html">Session ${sessionId}</a></li>`;
     }).join('\n');
 
     let homepageContent = await fs.readFile(homepagePath, 'utf-8');
     
+    // Forcefully replace the entire <ul> content, removing any existing links
     homepageContent = homepageContent.replace(
         /<ul id="session-list">[\s\S]*?<\/ul>/,
-        `<ul id="session-list">${newLinks}</ul>`
+        `<ul id="session-list">\n${uniqueLinks}\n</ul>`
     );
 
     await fs.writeFile(homepagePath, homepageContent);
+    console.log('Homepage updated with unique session links');
 };
 
 const main = async () => {
