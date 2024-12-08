@@ -4,14 +4,7 @@
   "description": "Dynamic HTML Generator",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "generate": "node script.js",
-    "prebuild": "npm run generate",
-    "build": "vite build",
-    "preview": "vite preview",
-    "start": "node script.js"
-  },
-  "devDependencies": {
-    "vite": "^4.0.0"
+    "start": "node script.js",
+    "generate": "node script.js"
   }
 }
