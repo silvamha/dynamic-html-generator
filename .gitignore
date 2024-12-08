@@ -1,0 +1,15 @@
+# Modules
+node_modules/
+
+
+# Secrets
+.env    
+
+# Ignore
+#.gitignore
+
+# Notes
+notes/
+
+
+
