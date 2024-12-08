@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-// Define paths - everything in public folder
-const publicDir = './public';
+// Define paths - everything in dist folder
+const publicDir = './dist';
 const jsonDir = path.join(publicDir, 'json');
 const sessionsDir = path.join(publicDir, 'sessions');
-const homepagePath = './index.html';
+const homepagePath = './dist/index.html';
 
 // Helper function to create an HTML file from JSON
 const generateHTML = async (sessionData) => {
@@ -30,16 +30,16 @@ const generateHTML = async (sessionData) => {
         <h2>Content</h2>
         <div class="content">
             <h3>Question</h3>
-            <p>${sessionData.content.question}</p>
+            <p>${sessionData.content.question || ''}</p>
             <h3>Answer</h3>
-            <p>${sessionData.content.answer}</p>
+            <p>${sessionData.content.answer || ''}</p>
         </div>
         <p><a href="/">Back to Home</a></p>
     </body>
     </html>
     `;
 
-    // Also copy the JSON to public directory to preserve it
+    // Also copy the JSON to dist directory to preserve it
     await fs.writeFile(
         path.join(jsonDir, 'session.json'),
         JSON.stringify(sessionData, null, 2)
@@ -53,7 +53,7 @@ const generateHTML = async (sessionData) => {
 // Update the homepage with a link to the new session
 const updateHomepage = async (sessionData) => {
     let homepageContent = await fs.readFile(homepagePath, 'utf-8');
-    const newLink = `<li><a href="./sessions/${sessionData.session_id}.html">Session ${sessionData.session_id}</a></li>`;
+    const newLink = `<li><a href="/sessions/${sessionData.session_id}.html">Session ${sessionData.session_id}</a></li>`;
 
     // Remove any duplicate links first
     homepageContent = homepageContent.replace(new RegExp(newLink, 'g'), '');
