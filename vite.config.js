@@ -1,7 +1,6 @@
-import { defineConfig } from 'vite'
-
-export default defineConfig({
+// vite.config.js
+export default {
     build: {
-        outDir: 'dist'
+      emptyOutDir: false  // Prevent clearing dist directory
     }
-})
+  }

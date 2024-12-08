@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const jsonDir = './dist/json'; // Path to JSON files
-const sessionsDir = './dist/sessions'; // Path to generated HTML files
-const homepagePath = './dist/index.html'; // Path to homepage
+const jsonDir = './dist/json';
+const sessionsDir = './dist/sessions';
+const homepagePath = './dist/index.html';
 
 const generateHTML = async (sessionData) => {
     await fs.mkdir(sessionsDir, { recursive: true });
@@ -19,14 +19,14 @@ const generateHTML = async (sessionData) => {
     </head>
     <body>
         <h1>Session ${sessionData.session_id}</h1>
-        <p><strong>Date:</strong> ${sessionData.timestamp}</p>
-        <p><strong>Summary:</strong> ${sessionData.summary}</p>
+        <p><strong>Date:</strong> ${sessionData.timestamp || 'N/A'}</p>
+        <p><strong>Summary:</strong> ${sessionData.summary || 'No summary available'}</p>
         <h2>Content</h2>
         <div class="content">
             <h3>Question</h3>
-            <p>${sessionData.content?.question || ''}</p>
+            <p>${sessionData.content?.question || 'No question'}</p>
             <h3>Answer</h3>
-            <p>${sessionData.content?.answer || ''}</p>
+            <p>${sessionData.content?.answer || 'No answer'}</p>
         </div>
         <p><a href="/">Back to Home</a></p>
     </body>
@@ -36,36 +36,29 @@ const generateHTML = async (sessionData) => {
     const outputFilePath = path.join(sessionsDir, `${sessionData.session_id}.html`);
     await fs.writeFile(outputFilePath, sessionHTML);
     console.log(`Session HTML created at: ${outputFilePath}`);
+    return outputFilePath;
 };
 
-const updateHomepage = async (sessionData, isFirstSession) => {
+const updateHomepage = async (sessionPaths) => {
     try {
-        // Read the homepage file
         let homepageContent = await fs.readFile(homepagePath, 'utf-8');
         
-        // If it's the first session, clear existing dynamic links
-        if (isFirstSession) {
-            homepageContent = homepageContent.replace(
-                /(<ul id="session-list">)[\s\S]*?(<\/ul>)/,
-                '$1\n            <!-- Dynamic links to session pages will be added here -->\n        $2'
-            );
-        }
+        // Clear existing dynamic links
+        homepageContent = homepageContent.replace(
+            /(<ul id="session-list">)[\s\S]*?(<\/ul>)/,
+            '$1\n            <!-- Dynamic links to session pages will be added here -->\n        $2'
+        );
+
+        // Add new links
+        const newLinks = sessionPaths.map(sessionPath => {
+            const sessionId = path.basename(sessionPath, '.html');
+            return `<li><a href="/sessions/${sessionId}.html">Session ${sessionId}</a></li>`;
+        }).join('\n            ');
+
+        const updatedHomepageContent = homepageContent.replace('</ul>', `    ${newLinks}\n        </ul>`);
         
-        // Create the new link
-        const newLink = `<li><a href="/sessions/${sessionData.session_id}.html">Session ${sessionData.session_id}</a></li>`;
-        
-        // Ensure the link is not already present
-        if (!homepageContent.includes(newLink)) {
-            // Replace the closing </ul> tag with the new link and the closing tag
-            const updatedHomepageContent = homepageContent.replace('</ul>', `    ${newLink}\n        </ul>`);
-            
-            // Write the updated content back to the file
-            await fs.writeFile(homepagePath, updatedHomepageContent);
-            
-            console.log(`Added link for session ${sessionData.session_id} to homepage`);
-        } else {
-            console.log(`Link for session ${sessionData.session_id} already exists`);
-        }
+        await fs.writeFile(homepagePath, updatedHomepageContent);
+        console.log('Homepage updated with session links');
     } catch (error) {
         console.error('Error updating homepage:', error);
     }
@@ -74,19 +67,22 @@ const updateHomepage = async (sessionData, isFirstSession) => {
 const main = async () => {
     try {
         const files = await fs.readdir(jsonDir);
-        for (const [index, file] of files.entries()) {
+        const sessionPaths = [];
+
+        for (const file of files) {
             if (file.endsWith('.json')) {
                 const jsonFile = path.join(jsonDir, file);
                 const data = await fs.readFile(jsonFile, 'utf-8');
                 const sessionData = JSON.parse(data);
-                await generateHTML(sessionData);
                 
-                // Pass a flag to indicate if it's the first session
-                await updateHomepage(sessionData, index === 0);
+                const sessionPath = await generateHTML(sessionData);
+                sessionPaths.push(sessionPath);
             }
         }
+
+        await updateHomepage(sessionPaths);
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error processing sessions:', error);
     }
 };
 
