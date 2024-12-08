@@ -2,12 +2,16 @@ import fs from 'fs/promises'; // ES Module for file system
 import path from 'path';
 
 // Define paths
-const jsonDir = './json/';
-const sessionsDir = './sessions/';
-const homepagePath = './index.html';
+const jsonDir = './dist/json/';
+const sessionsDir = './dist/sessions/';
+const homepagePath = './dist/index.html';
+
+
 
 // Helper function to create an HTML file from JSON
 const generateHTML = async (sessionData) => {
+    await fs.mkdir(sessionsDir, { recursive: true });
+
     const sessionHTML = `
     <!DOCTYPE html>
     <html lang="en">
