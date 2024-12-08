@@ -70,15 +70,15 @@ const updateHomepage = async (sessionPaths) => {
     }).join('\n');
 
     let homepageContent = await fs.readFile(homepagePath, 'utf-8');
-    
+
     // Use a more robust method to insert links
     const listStartIndex = homepageContent.indexOf('<ul id="session-list">');
     const listEndIndex = homepageContent.indexOf('</ul>', listStartIndex);
 
     if (listStartIndex !== -1 && listEndIndex !== -1) {
-        homepageContent = homepageContent.slice(0, listStartIndex + 22) + '\n' + 
-                          uniqueLinks + '\n' + 
-                          homepageContent.slice(listEndIndex);
+        homepageContent = homepageContent.slice(0, listStartIndex + 22) + '\n' +
+            uniqueLinks + '\n' +
+            homepageContent.slice(listEndIndex);
     }
 
     await fs.writeFile(homepagePath, homepageContent);
@@ -95,7 +95,7 @@ const main = async () => {
                 const jsonFile = path.join(jsonDir, file);
                 const data = await fs.readFile(jsonFile, 'utf-8');
                 const sessionData = JSON.parse(data);
-                
+
                 const sessionPath = await generateSessionHTML(sessionData);
                 sessionPaths.push(sessionPath);
             }
@@ -111,15 +111,15 @@ if (typeof window === 'undefined') {
     main();
 }
 
-document.getElementById('searchInput').addEventListener('input', function () {
-    const query = this.value.toLowerCase();
-    const links = document.querySelectorAll('#session-list li a');
+// document.getElementById('searchInput').addEventListener('input', function () {
+//     const query = this.value.toLowerCase();
+//     const links = document.querySelectorAll('#session-list li a');
 
-    links.forEach(link => {
-        if (link.textContent.toLowerCase().includes(query)) {
-            link.parentElement.style.display = '';
-        } else {
-            link.parentElement.style.display = 'none';
-        }
-    });
-});
+//     links.forEach(link => {
+//         if (link.textContent.toLowerCase().includes(query)) {
+//             link.parentElement.style.display = '';
+//         } else {
+//             link.parentElement.style.display = 'none';
+//         }
+//     });
+// });
