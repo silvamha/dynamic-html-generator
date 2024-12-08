@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Dynamic HTML Generator",
   "type": "module",
-  "scripts": {
+ "scripts": {
+    "build": "echo 'Skipping build step'",
     "start": "node script.js",
     "generate": "node script.js"
-  }
+}
+
 }
