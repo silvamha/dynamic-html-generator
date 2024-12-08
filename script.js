@@ -71,11 +71,15 @@ const updateHomepage = async (sessionPaths) => {
 
     let homepageContent = await fs.readFile(homepagePath, 'utf-8');
     
-    // Forcefully replace the entire <ul> content, removing any existing links
-    homepageContent = homepageContent.replace(
-        /<ul id="session-list">[\s\S]*?<\/ul>/,
-        `<ul id="session-list">\n${uniqueLinks}\n</ul>`
-    );
+    // Use a more robust method to insert links
+    const listStartIndex = homepageContent.indexOf('<ul id="session-list">');
+    const listEndIndex = homepageContent.indexOf('</ul>', listStartIndex);
+
+    if (listStartIndex !== -1 && listEndIndex !== -1) {
+        homepageContent = homepageContent.slice(0, listStartIndex + 22) + '\n' + 
+                          uniqueLinks + '\n' + 
+                          homepageContent.slice(listEndIndex);
+    }
 
     await fs.writeFile(homepagePath, homepageContent);
     console.log('Homepage updated with unique session links');
