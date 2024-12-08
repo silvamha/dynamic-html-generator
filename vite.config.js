@@ -8,6 +8,8 @@ export default defineConfig({
                 main: './index.html',
             },
         },
+        minify: 'esbuild',
+        sourcemap: true,
     },
     server: {
         open: true,

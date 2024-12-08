@@ -203,6 +203,55 @@
 //     main();
 // }
 
+// import fs from 'fs/promises';
+// import path from 'path';
+
+// // Define paths - everything in public folder
+// const publicDir = './public';
+// const jsonDir = path.join(publicDir, 'json');
+// const sessionsDir = path.join(publicDir, 'sessions');
+// const homepagePath = './index.html';
+
+// // Helper function to create an HTML file from JSON
+// const generateHTML = async (sessionData) => {
+//     // Create all necessary directories
+//     await fs.mkdir(publicDir, { recursive: true });
+//     await fs.mkdir(jsonDir, { recursive: true });
+//     await fs.mkdir(sessionsDir, { recursive: true });
+
+//     const sessionHTML = `
+//     <!DOCTYPE html>
+//     <html lang="en">
+//     <head>
+//         <meta charset="UTF-8">
+//         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//         <link rel="stylesheet" href="../styles.css">
+//         <title>Session ${sessionData.session_id}</title>
+//     </head>
+//     <body>
+//         <h1>Session ${sessionData.session_id}</h1>
+//         <p><strong>Date:</strong> ${sessionData.timestamp}</p>
+//         <p><strong>Summary:</strong> ${sessionData.summary}</p>
+//         <h2>Content</h2>
+//         <div class="content">
+//             <h3>Question</h3>
+//             <p>${sessionData.content.question}</p>
+//             <h3>Answer</h3>
+//             <p>${sessionData.content.answer}</p>
+//         </div>
+//         <p><a href="../index.html">Back to Home</a></p>
+//     </body>
+//     </html>
+//     `;
+
+your script:
+Edit:
+script.js
++2
+-207
+83
+Preview
+Apply
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -225,7 +274,7 @@ const generateHTML = async (sessionData) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../styles.css">
+        <link rel="stylesheet" href="/styles.css">
         <title>Session ${sessionData.session_id}</title>
     </head>
     <body>
@@ -239,7 +288,7 @@ const generateHTML = async (sessionData) => {
             <h3>Answer</h3>
             <p>${sessionData.content.answer}</p>
         </div>
-        <p><a href="../index.html">Back to Home</a></p>
+        <p><a href="/">Back to Home</a></p>
     </body>
     </html>
     `;
